@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DesafioGlobalTec.Comum;
 using DesafioGlobalTec.Comum.Exceptions;
 using DesafioGlobalTec.Comum.Models;
 using DesafioGlobalTec.Repository.Comum;
@@ -43,6 +45,24 @@ namespace DesafioGlobalTec.Api.Controllers
             {
                 return BadRequest(erro.Message);
             }            
+        }
+
+        [Route("[action]/{uf}")]
+        // GET api/pessoas/{uf}
+        [HttpGet]
+        public ActionResult<IEnumerable<Pessoa>> GetByUf(string uf)
+        {
+            try
+            {
+                if (!Constantes.Ufs.Contains(uf.ToUpper()))
+                    throw new Exception("UF inválida.");
+
+                return _repositorio.ObterTodos().Where(pX => pX.Uf.Equals(uf.ToUpper())).ToList();
+            }
+            catch (Exception erro)
+            {
+                return BadRequest(erro.Message);
+            }
         }
 
         // POST api/pessoas
